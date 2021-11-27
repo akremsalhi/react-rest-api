@@ -20,13 +20,15 @@ export default function FetchingData() {
         setReloadReload(r => !r)
     }
 
-    const url = reloadError ? `https://jsonplaceholder.typicode.com/user` : `https://jsonplaceholder.typicode.com/users`
+    const action = reloadError ? `/user` : `/users`
 
     return (
         <div className="grid grid-cols-1 gap-y-2">
-            <div className="grid grid-cols-2 justify-between items-center">
+            <div className="grid justify-between items-center lg:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1 sm:gap-y-1">
                 <h1 className="text-2xl">Fetching data</h1>
-                <div className="grid grid-cols-2 justify-between items-center gap-x-2">
+
+                <div className="grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 sm:gap-y-2 xs:grid-cols-1 xs:gap-y-2 justify-between items-center gap-x-2">
+
                     <Button rightIcon={<RepeatClockIcon />} onClick={() => updateState()}>
                         Reload data
                     </Button>
@@ -34,9 +36,10 @@ export default function FetchingData() {
                         Try with {reloadError ? 'Success' : 'Error'}
                     </Button>
                 </div>
+                
             </div>
 
-            <FormFetch url={url}>
+            <FormFetch action={action}>
                 <FormSearchInput name="q" id="q" className="bg-white" placeholder="Search" autoFocus></FormSearchInput>
                 <Fetch fallback={<UsersSkeleton count={10} />} reload={reload}>
                     {(users: any[]) =>  <Users users={users} />}

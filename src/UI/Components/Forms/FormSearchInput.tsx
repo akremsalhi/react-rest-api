@@ -1,9 +1,10 @@
 import React from 'react'
 
-import { Input, InputGroup, InputLeftElement, InputProps } from "@chakra-ui/input";
+import { Input, InputGroup, InputLeftElement, InputProps, InputRightElement } from "@chakra-ui/input";
 
 import { useFormFetch } from '../../../shared/context/FormContext';
 import { SearchIcon } from '@chakra-ui/icons';
+import { Spinner } from '@chakra-ui/react';
 
 const SearchInput: React.FC<InputProps & { helperText?: string, onChange?: Function|undefined }> = ({
     id,
@@ -16,7 +17,8 @@ const SearchInput: React.FC<InputProps & { helperText?: string, onChange?: Funct
     return (
         <InputGroup {...props}>
             <InputLeftElement pointerEvents="none" children={ <SearchIcon fontSize={12} /> } />
-            <Input {...props} onChange={(e) => setTimeout(() => form.search.onSearchChange(((e.target) as HTMLInputElement).value), 700)} autoComplete="off" />
+            <Input {...props} onChange={(e) => setTimeout(() => form.search.onSearchChange(((e.target) as HTMLInputElement).value), 800)} autoComplete="off" readOnly={form.response.loading} />
+            {form.response.loading && <InputRightElement pointerEvents="none" children={ <Spinner size="sm" /> } />}
         </InputGroup>
     )
 }

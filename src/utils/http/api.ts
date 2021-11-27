@@ -6,9 +6,7 @@ export async function jsonFetch (url: string, params: any = {}) {
     }
 
     if (params.queryParams && typeof params.queryParams === 'object') {
-        const queryString = (new URLSearchParams(params.queryParams)).toString()
-        url += `?${queryString}`
-        console.log(url)
+        url += `?${(new URLSearchParams(params.queryParams)).toString()}`
     }
 
     params = {
@@ -20,7 +18,7 @@ export async function jsonFetch (url: string, params: any = {}) {
         ...params
     }
 
-    const response = await fetch(url, params)
+    const response = await fetch(process.env.REACT_APP_API_URL + url, params)
 
     if (response.status === 204) {
         return null
@@ -40,28 +38,19 @@ export async function jsonFetch (url: string, params: any = {}) {
 
 export class ApiError {
 
-    public response
-    public body
+    public res
+    public data
 
-    constructor (response: any, body: any) {
-        this.response = response
-        this.body = body
+    constructor (res: any, data: any) {
+        this.res = res
+        this.data = data
     }
 
-    get responseBody () {
-        return this.body
+    get response () {
+        return this.res
     }
 
-    get message () {
-        return this.body.message || null
+    get body () {
+        return this.data
     }
-
-    get errors () {
-        return this.body.errors || {}
-    }
-
-    get status () {
-        return this.response.status
-    }
-
 }

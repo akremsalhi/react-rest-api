@@ -4,7 +4,7 @@
 
 
 .card {
-    @apply bg-white shadow-md rounded-md p-5
+    @apply bg-white shadow-md rounded-md p-5 h-full
 }
 
 .card .card__header {

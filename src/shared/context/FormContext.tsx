@@ -21,14 +21,14 @@ export const useFormFetch = () => {
     return useContext(FormFetchContext)
 }
 
-export function FormFetch ({ children, url }: any) {
+export function FormFetch ({ children, action }: any) {
 
     const [q, setSearch] = useState('')
     const [response, setResponse] = useState(initialReasponse)
 
     const onSearchChange = (v: string) => {
         setSearch(v)
-    } 
+    }
 
     const get = async () => {
         try {
@@ -42,11 +42,11 @@ export function FormFetch ({ children, url }: any) {
             const queryParams = q !== '' ? { q } : undefined
             const params = { queryParams }
 
-            const data = await jsonFetch(url, params)
+            const data = await jsonFetch(action, params)
             setResponse({ loading: false, offline: false, error: null, data  })
         } catch (e: any) {
             if (e instanceof ApiError) {
-                setResponse((r) => ({ ...r, loading: false, data: null, error: e.message ?? `${e.status} Not found` }))
+                setResponse((r) => ({ ...r, loading: false, data: null, error: e.body?.message ?? `${e.response?.status} Server error` }))
             } else {
                 console.error(e)
                 throw e
@@ -56,6 +56,7 @@ export function FormFetch ({ children, url }: any) {
 
     useEffect(() => {
         get()
+        // eslint-disable-next-line
     }, [q])
 
     const value = {

@@ -8,7 +8,7 @@ interface UsersSkeletonProps {
 
 export default function UsersSkeleton({ count }: UsersSkeletonProps): JSX.Element {
     return (
-        <div className="grid gap-2 grid-cols-4">
+        <div className="grid gap-2 lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1">
             {Array.from(Array(count).keys())
                 .map((_, index) => (
                     <Card
