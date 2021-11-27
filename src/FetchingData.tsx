@@ -27,7 +27,7 @@ export default function FetchingData() {
     return (
         <div className="grid grid-cols-1 gap-y-2">
             <div className="grid justify-between items-center lg:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1 sm:gap-y-1">
-                <h1 className="text-2xl">Example REST API with <strong>React</strong></h1>
+                <h1 className="text-2xl">Example REST API usage with <strong>React</strong></h1>
 
                 <div className="grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 sm:gap-y-2 xs:grid-cols-1 xs:gap-y-2 justify-between items-center gap-x-2">
 
