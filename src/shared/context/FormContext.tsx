@@ -46,7 +46,7 @@ export function FormFetch ({ children, action }: any) {
             setResponse({ loading: false, offline: false, error: null, data  })
         } catch (e: any) {
             if (e instanceof ApiError) {
-                setResponse((r) => ({ ...r, loading: false, data: null, error: e.body?.message ?? `${e.response?.status} Server error` }))
+                setResponse((r) => ({ ...r, loading: false, offline: false, data: null, error: e.body?.message ?? `${e.response?.status} Server error` }))
             } else {
                 console.error(e)
                 throw e

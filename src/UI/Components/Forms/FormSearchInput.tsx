@@ -17,7 +17,12 @@ const SearchInput: React.FC<InputProps & { helperText?: string, onChange?: Funct
     return (
         <InputGroup {...props}>
             <InputLeftElement pointerEvents="none" children={ <SearchIcon fontSize={12} /> } />
-            <Input {...props} onChange={(e) => setTimeout(() => form.search.onSearchChange(((e.target) as HTMLInputElement).value), 800)} autoComplete="off" readOnly={form.response.loading} />
+            <Input
+                onChange={(e) => setTimeout(() => form.search.onSearchChange(((e.target) as HTMLInputElement).value), 800)}
+                autoComplete="off"
+                readOnly={form.response.loading}
+                {...props}
+            />
             {form.response.loading && <InputRightElement pointerEvents="none" children={ <Spinner size="sm" /> } />}
         </InputGroup>
     )
