@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { ApiError, jsonFetch } from "../../utils/http/api";
 
 const initialReasponse: { loading: boolean, offline: boolean, data:any, error: string|null } = {
@@ -25,19 +25,18 @@ export function FormFetch ({ children, action }: any) {
 
     const [q, setSearch] = useState('')
     const [response, setResponse] = useState(initialReasponse)
+    const ref = useRef(() => {})
 
     const onSearchChange = (v: string) => {
         setSearch(v)
     }
 
-    const get = async () => {
+    ref.current = async () => {
         try {
-
             if (!window.navigator.onLine) {
                 setResponse((r:any) => ({ ...r, offline: true }))
                 return
             }
-
             setResponse((r: any) => ({ ...r, loading: true }))
             const queryParams = q !== '' ? { q } : undefined
             const params = { queryParams }
@@ -55,14 +54,13 @@ export function FormFetch ({ children, action }: any) {
     }
 
     useEffect(() => {
-        get()
-        // eslint-disable-next-line
+        ref.current()
     }, [q])
 
     const value = {
         search: { q, onSearchChange },
         response: {
-            get,
+            get: ref.current,
             ...response
         }
     }
