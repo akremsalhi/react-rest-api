@@ -36,21 +36,14 @@ export async function jsonFetch (url: string, params: any = {}) {
 }
 
 
-export class ApiError {
+export class ApiError extends Error {
 
-    public res
-    public data
+    public response
+    public body
 
-    constructor (res: any, data: any) {
-        this.res = res
-        this.data = data
-    }
-
-    get response () {
-        return this.res
-    }
-
-    get body () {
-        return this.data
+    constructor (response: any, body: any) {
+        super()
+        this.response = response
+        this.body = body
     }
 }

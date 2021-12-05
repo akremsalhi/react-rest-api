@@ -10,9 +10,9 @@ const initialReasponse: { loading: boolean, offline: boolean, data:any, error: s
 }
 
 const FormFetchContext = createContext({
-        search: { q: '', onSearchChange: (_v: string) => {} },
+        params: { q: '', onParamsChange: (_name: string, _v: string) => {} },
         response: {
-            get: () => {},
+            fetch: () => {},
             ...initialReasponse
         },
     })
@@ -21,31 +21,38 @@ export const useFormFetch = () => {
     return useContext(FormFetchContext)
 }
 
-export function FormFetch ({ children, action }: any) {
+export function Fetch ({ children, endpoint }: any) {
 
-    const [q, setSearch] = useState('')
+    const [queryParams, setQueryParams] = useState<any>(undefined)
     const [response, setResponse] = useState(initialReasponse)
     const ref = useRef(() => {})
 
-    const onSearchChange = (v: string) => {
-        setSearch(v)
+    const onParamsChange = (name: string, value: string) => {
+        if (undefined === queryParams) {
+            setQueryParams({ [name]: value })
+        } else {
+            setQueryParams((params: any) => ({ ...params, [name]: value }))
+        }
     }
 
     ref.current = async () => {
         try {
-            if (!window.navigator.onLine) {
-                setResponse((r:any) => ({ ...r, offline: true }))
-                return
-            }
-            setResponse((r: any) => ({ ...r, loading: true }))
-            const queryParams = q !== '' ? { q } : undefined
-            const params = { queryParams }
+            if (!window.navigator.onLine)
+            return setResponse((r:any) => ({ ...r, offline: true, loading: false }))
 
-            const data = await jsonFetch(action, params)
+            setResponse((r: any) => ({ ...r, loading: true }))
+            const data = await jsonFetch(endpoint, { queryParams })
             setResponse({ loading: false, offline: false, error: null, data  })
         } catch (e: any) {
             if (e instanceof ApiError) {
-                setResponse((r) => ({ ...r, loading: false, offline: false, data: null, error: e.body?.message ?? `${e.response?.status} Server error` }))
+                const error = e.body?.message || `${e.response?.status} Server error`
+                setResponse((r) => ({
+                    ...r,
+                    loading: false,
+                    offline: false,
+                    data: null,
+                    error
+                }))
             } else {
                 console.error(e)
                 throw e
@@ -55,12 +62,12 @@ export function FormFetch ({ children, action }: any) {
 
     useEffect(() => {
         ref.current()
-    }, [q])
+    }, [queryParams?.q])
 
     const value = {
-        search: { q, onSearchChange },
+        params: { q: '', onParamsChange },
         response: {
-            get: ref.current,
+            fetch: ref.current,
             ...response
         }
     }

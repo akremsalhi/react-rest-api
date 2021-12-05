@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import Actions from './Actions';
 import Instructions from './Instructions';
-import { FormFetch } from './shared/context/FormContext';
+import { Fetch } from './shared/context/FormContext';
 import FormSearchInput from './UI/Components/Forms/FormSearchInput';
 import Users from './Users';
 import UsersSkeleton from './UsersSkeleton';
-import Fetch from './utils/http/components/Fetch';
+import Await from './utils/http/components/Await';
 
 
 
@@ -20,18 +20,18 @@ export default function FetchingData() {
         setReloadReload(r => !r)
     }
 
-    const action = reloadError ? `/user` : `/users`
+    const endpoint = reloadError ? `/user` : `/users`
 
     return (
-        <div className="grid grid-cols-1 gap-y-6">
+        <div className="grid gap-y-6">
             <Actions updateState={updateState} updateWithError={updateWithError} reloadError={reloadError} />
             
-            <FormFetch action={action}>
-                <FormSearchInput name="q" id="q" className="bg-white" placeholder="Search" autoFocus></FormSearchInput>
-                <Fetch fallback={<UsersSkeleton count={10} />} reload={reload}>
+            <Fetch endpoint={endpoint}>
+                <FormSearchInput name="q" id="q" placeholder="Search" autoFocus></FormSearchInput>
+                <Await fallback={<UsersSkeleton count={10} />} reload={reload}>
                     {(users: any[]) =>  <Users users={users} />}
-                </Fetch>
-            </FormFetch>
+                </Await>
+            </Fetch>
 
             <Instructions />
         </div>
